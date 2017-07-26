@@ -63,8 +63,8 @@ class ThreeLayerConvNet(object):
 
     b2 = np.zeros(hidden_dim)
     W2 = np.random.normal(loc=0.0, scale=weight_scale, size=(num_filters*pool_H*pool_W, hidden_dim))
-    b3 = np.zeros(hidden_dim)
-    W3 = np.random.normal(loc=0.0, scale=weight_scale, size=(hidden_dim, hidden_dim))
+    b3 = np.zeros(num_classes)
+    W3 = np.random.normal(loc=0.0, scale=weight_scale, size=(hidden_dim, num_classes))
     self.params.update({'b1':b1})
     self.params.update({'W1':W1})
     self.params.update({'b2':b2})
@@ -105,7 +105,6 @@ class ThreeLayerConvNet(object):
     crp_out, crp_cache = conv_relu_pool_forward(X, W1, b1, conv_param, pool_param)
     ar_out, ar_cache = affine_relu_forward(crp_out, W2, b2)
     scores, fc_cache = affine_forward(ar_out, W3, b3)
-
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################
@@ -130,6 +129,12 @@ class ThreeLayerConvNet(object):
     dW1 +=  reg*W1
     dW2 +=  reg*W2
     dW3 +=  reg*W3
+    grads.update({'W1':dW1})
+    grads.update({'W2':dW2})
+    grads.update({'W3':dW3})
+    grads.update({'b1':db1})
+    grads.update({'b2':db2})
+    grads.update({'b3':db3})
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################
